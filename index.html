@@ -10,7 +10,6 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 html{scroll-behavior:smooth;}
-
 body{background:#f5f5f5;color:#333;}
 
 /* HEADER */
@@ -71,7 +70,6 @@ font-size:12px;
 }
 
 .card-content{padding:15px;}
-
 .price{color:#ff6b00;font-size:22px;font-weight:bold;}
 
 .btn{
@@ -222,8 +220,8 @@ Entrega estimada: 30–50 min
 </div>
 
 <footer>
-<p><b>Pastel do Biel</b></p>
-<p>📞 (84) 9431-1594</p>
+<p>Pastel do Biel</p>
+<p>Telefone: (84) 9431-1594</p>
 </footer>
 
 <a class="whatsapp" href="https://wa.me/558494311594" target="_blank">
@@ -248,7 +246,7 @@ const container = document.getElementById("produtos");
 products.forEach(p=>{
 container.innerHTML += `
 <div class="card">
-<div class="badge">🔥 Top</div>
+<div class="badge">Top</div>
 <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e">
 <div class="card-content">
 <h3>${p.name}</h3>
@@ -311,33 +309,18 @@ let taxa = 0;
 
 if(tipo === "retirada"){
 deliveryFee = 0;
-tempo = "Retirada no local (imediato)";
+tempo = "Retirada no local";
 document.getElementById("infoEntrega").innerHTML = tempo;
 updateCart();
 return;
 }
 
-if(
-texto.includes("centro") ||
-texto.includes("tirol") ||
-texto.includes("cidade alta")
-){
-taxa = 3;
-tempo = "Entrega estimada: 20–35 min (próximo)";
-}
-else if(texto.length === 0){
-taxa = 5;
-tempo = "Entrega estimada: 30–50 min";
-}
-else{
-taxa = 5;
-tempo = "Entrega estimada: 35–60 min";
-}
+taxa = texto.length === 0 ? 5 : 5;
 
 deliveryFee = taxa;
 
 document.getElementById("infoEntrega").innerHTML =
-`📍 Loja: Rua Tietê, 124 - Natal/RN<br>${tempo}<br>💰 Taxa: R$ ${taxa.toFixed(2)}`;
+`Entrega estimada - Taxa: R$ ${taxa.toFixed(2)}`;
 
 updateCart();
 }
@@ -349,20 +332,48 @@ alert("Carrinho vazio");
 return;
 }
 
-document.getElementById("status").innerText = "Status: Recebido";
+const nome = document.getElementById("nome").value;
+const rua = document.getElementById("rua").value;
+const cidade = document.getElementById("cidade").value;
+const referencia = document.getElementById("referencia").value;
+const pagamento = document.getElementById("pagamento").value;
+const tipoEntrega = document.getElementById("tipoEntrega").value;
+
+let total = 0;
 
 let msg = "NOVO PEDIDO\n\n";
 
-cart.forEach(i=>{
-msg += `${i.name} x${i.quantity}\n`;
+msg += "CLIENTE\n";
+msg += `Nome: ${nome}\n\n`;
+
+msg += "ITENS\n";
+
+cart.forEach(item=>{
+const subtotal = item.price * item.quantity;
+total += subtotal;
+msg += `${item.name} x${item.quantity} - R$ ${subtotal.toFixed(2)}\n`;
 });
 
-msg += "\nTotal atualizado\n";
+total += deliveryFee;
 
-window.open("https://wa.me/558494311594?text="+encodeURIComponent(msg));
+msg += "\nENTREGA\n";
+msg += `Tipo: ${tipoEntrega}\n`;
+msg += `Endereco: ${rua} - ${cidade}\n`;
+msg += `Referencia: ${referencia}\n\n`;
+
+msg += "PAGAMENTO\n";
+msg += `${pagamento}\n\n`;
+
+msg += "TOTAL\n";
+msg += `R$ ${total.toFixed(2)}\n`;
+
+document.getElementById("status").innerText = "Status: Recebido";
+
+window.open("https://wa.me/558494311594?text=" + encodeURIComponent(msg));
 }
 
 </script>
 
 </body>
 </html>
+
