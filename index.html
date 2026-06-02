@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pastel do Biel</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+html{scroll-behavior:smooth;}
+
+body{background:#f5f5f5;color:#333;}
+
+/* HEADER */
+header{
+position:sticky;top:0;z-index:1000;
+background:#111;padding:15px 25px;
+display:flex;justify-content:space-between;align-items:center;
+}
+
+.logo{display:flex;align-items:center;gap:12px;}
+.logo img{width:55px;height:55px;border-radius:50%;border:3px solid #ff6b00;}
+.logo h2{color:#ff6b00;}
+
+.cart-badge{
+background:#ff6b00;color:white;
+padding:10px 15px;border-radius:30px;
+font-weight:bold;
+}
+
+/* HERO */
+.hero{
+height:380px;
+background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+url('https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=1600');
+background-size:cover;
+display:flex;align-items:center;justify-content:center;
+text-align:center;color:white;
+}
+
+.hero h1{font-size:50px;}
+.hero a{
+display:inline-block;margin-top:15px;
+background:#ff6b00;color:white;
+padding:12px 22px;border-radius:40px;
+text-decoration:none;
+}
+
+/* PRODUTOS */
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;padding:20px;max-width:1200px;margin:auto;
+}
+
+.card{
+background:white;border-radius:15px;
+overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,.1);
+position:relative;
+}
+
+.card img{width:100%;height:200px;object-fit:cover;}
+
+.badge{
+position:absolute;top:10px;left:10px;
+background:#ff6b00;color:white;
+padding:5px 10px;border-radius:20px;
+font-size:12px;
+}
+
+.card-content{padding:15px;}
+
+.price{color:#ff6b00;font-size:22px;font-weight:bold;}
+
+.btn{
+width:100%;
+background:linear-gradient(45deg,#ff6b00,#ff8f00);
+color:white;border:none;
+padding:12px;border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+}
+
+/* BOX */
+.container{max-width:1000px;margin:auto;padding:20px;}
+
+.box{
+background:white;padding:20px;
+border-radius:15px;margin-top:20px;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.cart-item{
+display:flex;justify-content:space-between;
+padding:10px 0;border-bottom:1px solid #eee;
+}
+
+.qty button{
+width:28px;height:28px;border:none;
+border-radius:50%;background:#ff6b00;color:white;
+cursor:pointer;
+}
+
+.total{font-size:24px;font-weight:bold;margin-top:10px;}
+
+input,select,textarea{
+width:100%;padding:12px;margin-top:10px;
+border-radius:10px;border:2px solid #ddd;
+}
+
+input:focus,select:focus,textarea:focus{
+border-color:#ff6b00;
+}
+
+.info{
+margin-top:10px;
+padding:12px;
+background:#fff6ee;
+border-left:4px solid #ff6b00;
+border-radius:8px;
+}
+
+.status{
+margin-top:10px;
+color:#ff6b00;
+font-weight:bold;
+}
+
+/* WHATS */
+.whatsapp{
+position:fixed;
+right:20px;
+bottom:20px;
+width:65px;height:65px;
+background:#25D366;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+font-size:30px;
+text-decoration:none;
+}
+
+footer{
+background:#111;color:white;
+text-align:center;
+padding:20px;
+margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">
+<img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
+<h2>Pastel do Biel</h2>
+</div>
+
+<div class="cart-badge">🛒 <span id="cartCount">0</span></div>
+</header>
+
+<section class="hero">
+<div>
+<h1>Pastel do Biel</h1>
+<p>Os melhores pastéis da cidade</p>
+<a href="#produtos">Ver Cardápio</a>
+</div>
+</section>
+
+<section id="produtos" class="products"></section>
+
+<div class="container">
+
+<div class="box">
+<h2>Carrinho</h2>
+<div id="cartItems"></div>
+<div class="total" id="total">Total: R$ 0,00</div>
+<div class="status" id="status">Status: Aguardando pedido</div>
+</div>
+
+<div class="box">
+<h2>Entrega</h2>
+
+<select id="tipoEntrega" onchange="calcEntrega()">
+<option value="entrega">Entrega</option>
+<option value="retirada">Retirar no local</option>
+</select>
+
+<input id="endereco" placeholder="Digite bairro ou endereço completo" oninput="calcEntrega()">
+
+<div class="info" id="infoEntrega">
+Entrega estimada: 30–50 min
+</div>
+
+<h2>Dados</h2>
+
+<input id="nome" placeholder="Nome">
+<input id="rua" placeholder="Rua e número">
+<input id="cidade" placeholder="Cidade">
+<textarea id="referencia" placeholder="Referência"></textarea>
+
+<select id="pagamento">
+<option>Pix</option>
+<option>Dinheiro</option>
+<option>Cartão</option>
+</select>
+
+<div class="info">
+<b>Loja:</b> Rua Tietê, 124 - Natal/RN<br>
+<b>PIX:</b> 073.633.484-05
+</div>
+
+<button class="btn" onclick="finishOrder()">Finalizar Pedido</button>
+
+</div>
+
+</div>
+
+<footer>
+<p><b>Pastel do Biel</b></p>
+<p>📞 (84) 9431-1594</p>
+</footer>
+
+<a class="whatsapp" href="https://wa.me/558494311594" target="_blank">
+<i class="fab fa-whatsapp"></i>
+</a>
+
+<script>
+
+const products = [
+{name:"Pastel de Carne",price:8},
+{name:"Pastel de Frango",price:8},
+{name:"Pastel de Pizza",price:8},
+{name:"Pastel de Queijo",price:8},
+{name:"Pastel de Calabresa",price:8}
+];
+
+let cart = [];
+let deliveryFee = 0;
+
+const container = document.getElementById("produtos");
+
+products.forEach(p=>{
+container.innerHTML += `
+<div class="card">
+<div class="badge">🔥 Top</div>
+<img src="https://images.unsplash.com/photo-1600891964092-4316c288032e">
+<div class="card-content">
+<h3>${p.name}</h3>
+<div class="price">R$ ${p.price.toFixed(2)}</div>
+<button class="btn" onclick="addToCart('${p.name}',${p.price})">Adicionar</button>
+</div>
+</div>`;
+});
+
+function addToCart(name,price){
+let item = cart.find(i=>i.name===name);
+if(item) item.quantity++;
+else cart.push({name,price,quantity:1});
+updateCart();
+}
+
+function changeQty(name,val){
+let item = cart.find(i=>i.name===name);
+item.quantity += val;
+if(item.quantity<=0) cart = cart.filter(i=>i.name!==name);
+updateCart();
+}
+
+function updateCart(){
+let total = 0;
+let count = 0;
+
+const box = document.getElementById("cartItems");
+box.innerHTML = "";
+
+cart.forEach(i=>{
+let sub = i.price*i.quantity;
+total += sub;
+count += i.quantity;
+
+box.innerHTML += `
+<div class="cart-item">
+<div>${i.name}<br>R$ ${i.price}</div>
+<div class="qty">
+<button onclick="changeQty('${i.name}',-1)">-</button>
+${i.quantity}
+<button onclick="changeQty('${i.name}',1)">+</button>
+</div>
+</div>`;
+});
+
+total += deliveryFee;
+
+document.getElementById("total").innerText = "Total: R$ " + total.toFixed(2);
+document.getElementById("cartCount").innerText = count;
+}
+
+function calcEntrega(){
+
+const tipo = document.getElementById("tipoEntrega").value;
+const texto = document.getElementById("endereco").value.toLowerCase();
+
+let tempo = "";
+let taxa = 0;
+
+if(tipo === "retirada"){
+deliveryFee = 0;
+tempo = "Retirada no local (imediato)";
+document.getElementById("infoEntrega").innerHTML = tempo;
+updateCart();
+return;
+}
+
+if(
+texto.includes("centro") ||
+texto.includes("tirol") ||
+texto.includes("cidade alta")
+){
+taxa = 3;
+tempo = "Entrega estimada: 20–35 min (próximo)";
+}
+else if(texto.length === 0){
+taxa = 5;
+tempo = "Entrega estimada: 30–50 min";
+}
+else{
+taxa = 5;
+tempo = "Entrega estimada: 35–60 min";
+}
+
+deliveryFee = taxa;
+
+document.getElementById("infoEntrega").innerHTML =
+`📍 Loja: Rua Tietê, 124 - Natal/RN<br>${tempo}<br>💰 Taxa: R$ ${taxa.toFixed(2)}`;
+
+updateCart();
+}
+
+function finishOrder(){
+
+if(cart.length === 0){
+alert("Carrinho vazio");
+return;
+}
+
+document.getElementById("status").innerText = "Status: Recebido";
+
+let msg = "NOVO PEDIDO\n\n";
+
+cart.forEach(i=>{
+msg += `${i.name} x${i.quantity}\n`;
+});
+
+msg += "\nTotal atualizado\n";
+
+window.open("https://wa.me/558494311594?text="+encodeURIComponent(msg));
+}
+
+</script>
+
+</body>
+</html>
